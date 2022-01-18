@@ -1,0 +1,19 @@
+---
+- name: "installation de appache par docker"
+  hosts: prod
+  become: true
+  vars:
+    ansible_sudo_pass: aude
+  pre_tasks:
+    - name: install python-pip
+      apt: name=python-pip state=present update_cache=yes
+    - name: Install docker python
+      pip: name=docker-py
+  tasks:
+    - name: Create Apache conteneur
+      docker_container:
+        name: webapp
+        image: httpd
+        ports:
+          - "80:80"
+
