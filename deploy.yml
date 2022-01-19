@@ -5,15 +5,28 @@
   vars:
     ansible_sudo_pass: aude
   pre_tasks:
+    - name: Install git and wget
+      apt:
+        name: '{{ item }}'
+        state: present
+      when: ansible_distribution == "Ubuntu"
+      loop:
+        - git
+        - wget
     - name: install python-pip
       apt: name=python-pip state=present update_cache=yes
     - name: Install docker python
       pip: name=docker-py
   tasks:
+    - name: Copy du fichier index sur le node
+      template:
+        src: index.html.j2
+        dest: /home/ubuntu/index.html
     - name: Create Apache conteneur
       docker_container:
         name: webapp
         image: httpd
         ports:
           - "80:80"
-
+        volumes:
+          - /home/ubuntu/index.html:/usr/local/apache2/htdocs/index.html
