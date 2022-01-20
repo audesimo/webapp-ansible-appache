@@ -2,8 +2,8 @@
 - name: "installation de appache par docker"
   hosts: prod
   become: true
-  vars:
-    ansible_sudo_pass: aude
+  vars_files:
+     - /home/ubuntu/webapp-ansible-appache/files/secrets/credentials.vault
   pre_tasks:
     - name: Install git and wget
       apt:
